@@ -29,10 +29,16 @@ export class MainComponent implements OnInit {
   }
   editMovie(movie: Movie){
     this.editedMovie = movie;
+    console.log('editing movie', movie.title);
     this.selectedMovie = null;
   }
   createNewMovie(){
     this.editedMovie = {title: '', description: ''};
     this.selectedMovie = null;
+  }
+
+  deletedMovie(movie: Movie){
+  // TODO remove movie wiht API
+  console.log('delete movie', movie.title);
   }
 }

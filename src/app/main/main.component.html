@@ -1,9 +1,10 @@
 <div class="layout">
     <app-movie-list [movies]="movies" (selectMovie)="selectMovie($event)"
-        (editedMovie)="editMovie($event)">
+        (editedMovie)="editMovie($event)" (createNewMovie)="createNewMovie()"
+        (deletedMovie)="deletedMovie($event)">
     </app-movie-list>
     <div>
         <app-movie-details [movie]="selectedMovie" (updateMovie)="selectMovie($event)"></app-movie-details>
-        <app-movie-form *ngIf="editedMovie"></app-movie-form>
+        <app-movie-form *ngIf="editedMovie" [movie]="editedMovie"></app-movie-form>
     </div>
 </div>

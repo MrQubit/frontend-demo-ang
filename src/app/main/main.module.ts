@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { MainComponent } from './main.component';
 import { Routes, RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { ReactiveFormsModule } from '@angular/forms';
 
 import { ApiService } from '../api.service';
 
@@ -25,6 +26,7 @@ const router: Routes = [
   imports: [
     CommonModule,
     FontAwesomeModule,
+    ReactiveFormsModule,
     RouterModule.forChild(router)
   ],
   exports: [
