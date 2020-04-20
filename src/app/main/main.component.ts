@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ApiService } from '../api.service';
 import { Movie } from '../models/Movies';
+import { CookieService } from 'ngx-cookie-service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-main',
@@ -12,15 +14,25 @@ export class MainComponent implements OnInit {
   movies: Movie[] = [];
   selectedMovie = null;
   editedMovie = null;
-  constructor(private apiService: ApiService) { }
+  constructor(
+    private apiService: ApiService,
+    private router: Router,
+    private cookieService: CookieService,
+    ) { }
 
   ngOnInit(): void {
-    this.apiService.getMovies().subscribe(
-      (data: Movie[]) => {
-        this.movies = data;
-      },
-      error => console.log(error)
-    );
+    const mrToken = this.cookieService.get('mr-token');
+    console.log('we have cookies', mrToken);
+    if (!mrToken){
+      this.router.navigate(['/auth']);
+    }else{
+      this.apiService.getMovies().subscribe(
+        (data: Movie[]) => {
+          this.movies = data;
+        },
+        error => console.log(error)
+      );
+    }
   }
   selectMovie(movie: Movie){
     this.selectedMovie = movie;
@@ -38,7 +50,25 @@ export class MainComponent implements OnInit {
   }
 
   deletedMovie(movie: Movie){
-  // TODO remove movie wiht API
   console.log('delete movie', movie.title);
+  this.apiService.deleteMovie(movie.id).subscribe(
+    data => {
+      this.movies = this.movies.filter(mov => mov.id !== movie.id);
+      this.editedMovie = null;
+      this.selectedMovie = null;
+    },
+    error => console.log(error)
+  );
+  }
+  movieCreated(movie: Movie){
+    this.movies.push(movie);
+    this.editedMovie = null;
+  }
+  movieUpdated(movie: Movie){
+    const indx = this.movies.findIndex(mov => mov.id === movie.id);
+    if (indx >= 0) {
+      this.movies[indx] = movie;
+    }
+    this.editedMovie = null;
   }
 }

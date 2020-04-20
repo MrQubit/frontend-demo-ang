@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Movie } from '../../models/Movies';
 import { FormGroup, FormControl } from '@angular/forms';
 import { ApiService } from '../../api.service';
@@ -13,8 +13,12 @@ import { ApiService } from '../../api.service';
 export class MovieFormComponent implements OnInit {
 
   movieForm;
+  id = null;
+  @Output() movieCreated = new EventEmitter<Movie>();
+  @Output() movieUpdated = new EventEmitter<Movie>();
 
   @Input()  set movie(val: Movie){
+    this.id = val.id;
     this.movieForm = new FormGroup({
       title: new FormControl(val.title),
       description: new FormControl(val.description)
@@ -24,14 +28,40 @@ export class MovieFormComponent implements OnInit {
   constructor(
     private apiService: ApiService) { }
 
-  ngOnInit(): void {
+  ngOnInit() {
+  }
+  formDisabled(){
+    if (this.movieForm.value.title !== '' && this.movieForm.value.description !== ''){
+      console.log('lenght of title', this.movieForm.value.title.lenght);
+      console.log('lenght of description', this.movieForm.value.description.lenght);
+      console.log('In disabled form false');
+      return false;
+
+    }
+    else{
+      console.log('lenght of title', this.movieForm.value.title.lenght);
+      console.log('lenght of description', this.movieForm.value.description.lenght);
+      console.log('skope', this.movieForm.value);
+      console.log('skope1', this.movieForm.value.title);
+      console.log('In disabled form true');
+      return true;
+    }
+
   }
   saveForm(){
     console.log(this.movieForm.value);
-    this.apiService.createMovie(
-      this.movieForm.value.title, this.movieForm.value.description).subscribe(
-      result => console.log(result),
-      error => console.log(error)
-    );
+    if(this.id){
+      this.apiService.updateMovie(
+        this.id, this.movieForm.value.title, this.movieForm.value.description).subscribe(
+        (result: Movie) => this.movieUpdated.emit(result),
+        error => console.log(error)
+        );
+    }else{
+      this.apiService.createMovie(
+        this.movieForm.value.title, this.movieForm.value.description).subscribe(
+        (result: Movie) => this.movieCreated.emit(result),
+        error => console.log(error)
+      );
+    }
   }
 }
