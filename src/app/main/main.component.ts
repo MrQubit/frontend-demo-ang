@@ -34,6 +34,11 @@ export class MainComponent implements OnInit {
       );
     }
   }
+  logout(){
+    this.cookieService.delete('mr-token');
+    this.router.navigate(['/auth']);
+  }
+
   selectMovie(movie: Movie){
     this.selectedMovie = movie;
     console.log('selectedMovie is ', this.selectedMovie);

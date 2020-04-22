@@ -41,8 +41,8 @@ export class MovieFormComponent implements OnInit {
     else{
       console.log('lenght of title', this.movieForm.value.title.lenght);
       console.log('lenght of description', this.movieForm.value.description.lenght);
-      console.log('skope', this.movieForm.value);
-      console.log('skope1', this.movieForm.value.title);
+      console.log('scope', this.movieForm.value);
+      console.log('scope1', this.movieForm.value.title);
       console.log('In disabled form true');
       return true;
     }
